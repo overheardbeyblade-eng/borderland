@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[GAME 2] 難易度</title>
+<style>
+  body {
+    font-family: "Noto Sans JP", sans-serif;
+    text-align: center;
+    background: #fff;
+    color: #000;
+    padding-top: 80px;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin: 0 0 40px 0;
+  }
+
+  .card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 280px;
+  }
+
+  img {
+    width: 160px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  #cardName {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  button {
+    margin-top: 20px;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  button:hover {
+    background: #444;
+  }
+</style>
+</head>
+<body>
+
+<h1>[GAME 2]</h1>
+<p>難易度</p>
+
+<div class="card-container">
+  <img id="cardImage" src="https://deckofcardsapi.com/static/img/AS.png" alt="Kartu">
+  <div id="cardName">Ace of Spades</div>
+</div>
+
+<button id="shuffleButton">Shuffle</button>
+<button onclick="window.location.href='index.html'">Home</button>
+
+<script>
+const cards = [
+  { url: "https://deckofcardsapi.com/static/img/AC.png", name: "Ace of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/AD.png", name: "Ace of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/AH.png", name: "Ace of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/AS.png", name: "Ace of Spades" },
+  { url: "https://deckofcardsapi.com/static/img/JC.png", name: "Jack of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/JD.png", name: "Jack of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/JH.png", name: "Jack of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/JS.png", name: "Jack of Spades" },
+  { url: "https://deckofcardsapi.com/static/img/QC.png", name: "Queen of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/QD.png", name: "Queen of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/QH.png", name: "Queen of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/QS.png", name: "Queen of Spades" },
+  { url: "https://deckofcardsapi.com/static/img/KC.png", name: "King of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/KD.png", name: "King of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/KH.png", name: "King of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/KS.png", name: "King of Spades" }
+];
+
+const cardImage = document.getElementById("cardImage");
+const cardName = document.getElementById("cardName");
+const shuffleButton = document.getElementById("shuffleButton");
+
+shuffleButton.addEventListener("click", () => {
+  shuffleButton.disabled = true;
+  let count = 0;
+  const shuffleInterval = setInterval(() => {
+    const randomCard = cards[Math.floor(Math.random() * cards.length)];
+    cardImage.style.opacity = 0;
+    cardName.style.opacity = 0;
+    setTimeout(() => {
+      cardImage.src = randomCard.url;
+      cardName.textContent = randomCard.name;
+      cardImage.style.opacity = 1;
+      cardName.style.opacity = 1;
+    }, 80);
+    count += 100;
+  }, 100);
+
+  setTimeout(() => {
+    clearInterval(shuffleInterval);
+    shuffleButton.disabled = false;
+  }, 3000);
+});
+</script>
+
+</body>
+</html>
