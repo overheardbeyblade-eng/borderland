@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rulebook</title>
+<style>
+  body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    padding: 60px 20px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 40px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #fff;
+    display: inline-block;
+    padding-bottom: 10px;
+  }
+
+  section {
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+  }
+
+  p, li {
+    font-size: 0.95em;
+    color: #ddd;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+  }
+
+  li {
+    margin: 8px 0;
+  }
+
+  .symbol {
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .symbol:hover {
+    color: #ff3b3b;
+    text-shadow: 0 0 8px #ff3b3b;
+  }
+
+  .popup {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .popup-content {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 30px;
+    width: 80%;
+    max-width: 500px;
+    animation: pop 0.4s ease-out;
+  }
+
+  .popup-content h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    letter-spacing: 2px;
+  }
+
+  .popup-content p {
+    font-size: 0.95em;
+    color: #ccc;
+  }
+
+  .close {
+    margin-top: 20px;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  @keyframes pop {
+    from {transform: scale(0.9); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+  }
+
+  .back-btn {
+    margin-top: 40px;
+    padding: 10px 20px;
+    border: none;
+    background: #fff;
+    color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .back-btn:hover {
+    background: #ccc;
+  }
+
+  /* Joker warning */
+  .joker-warning {
+    margin-top: 60px;
+    color: #ff3b3b;
+    font-size: 0.9em;
+    opacity: 0;
+    animation: fadeJoker 3s ease-in-out 2s forwards;
+  }
+
+  @keyframes fadeJoker {
+    to {opacity: 1;}
+  }
+</style>
+</head>
+<body>
+
+  <h1>Rulebook</h1>
+
+  <section>
+    <h2>Tournament Format</h2>
+    <ul>
+      <li>Phase 1: <b>Round Robin</b> (Max 8 players per group)</li>
+      <li>Phase 2: <b>Double Elimination</b> for top players</li>
+      <li>Each duel: <b>4-point system</b>. First to reach 4 points wins.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Card Shuffle System</h2>
+    <ul>
+      <li><b>Ace</b> → Format 1G</li>
+      <li><b>3 / Jack</b> → Format 3G</li>
+      <li><b>4 / Queen</b> → Format 4G</li>
+      <li><b>5 / King</b> → Format 5G</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Special Rules</h2>
+    <ul>
+      <li><span class="symbol" onclick="openPopup('heart')">♥ Heart</span> — Exchange 1 Beyblade with your opponent.</li>
+      <li><span class="symbol" onclick="openPopup('diamond')">♦ Diamond</span> — Both players use Lock Deck format.</li>
+      <li><span class="symbol" onclick="openPopup('spade')">♠ Spade</span> — Swap your opponent’s Bit Combo.</li>
+      <li><span class="symbol" onclick="openPopup('club')">♣ Club</span> — Blind choose opponent’s Bey order.</li>
+    </ul>
+
+    <!-- Tempat nambah special rule baru -->
+    <!-- Contoh:
+    <li><span class="symbol" onclick="openPopup('joker')">🃏 Joker</span> — A mysterious rule appears...</li>
+    -->
+  </section>
+
+  <section>
+    <h2>Victory</h2>
+    <p>The player who reaches 4 points first is declared the winner.</p>
+  </section>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">Return</button>
+
+  <p class="joker-warning">⚠ Beware... if you ever draw the Joker.</p>
+
+  <!-- POPUPS -->
+  <div id="popup-heart" class="popup">
+    <div class="popup-content">
+      <h3>♥ HEART RULE</h3>
+      <p>Each player must exchange one Beyblade with their opponent before the match begins. Fate decides what remains yours.</p>
+      <button class="close" onclick="closePopup('heart')">Close</button>
+    </div>
+  </div>
+
+  <div id="popup-diamond" class="popup">
+    <div class="popup-content">
+      <h3>♦ DIAMOND RULE</h3>
+      <p>Both players must lock their decks before the match starts. No changes allowed — only precision and confidence matter.</p>
+      <button class="close" onclick="closePopup('diamond')">Close</button>
+    </div>
+  </div>
+
+  <div id="popup-spade" class="popup">
+    <div class="popup-content">
+      <h3>♠ SPADE RULE</h3>
+      <p>Players will swap their Bit Combo setups. Your greatest strength might become your downfall.</p>
+      <button class="close" onclick="closePopup('spade')">Close</button>
+    </div>
+  </div>
+
+  <div id="popup-club" class="popup">
+    <div class="popup-content">
+      <h3>♣ CLUB RULE</h3>
+      <p>Both players secretly arrange their opponent’s Bey order. Strategy meets chaos.</p>
+      <button class="close" onclick="closePopup('club')">Close</button>
+    </div>
+  </div>
+
+<script>
+function openPopup(type) {
+  document.getElementById("popup-" + type).style.display = "flex";
+}
+
+function closePopup(type) {
+  document.getElementById("popup-" + type).style.display = "none";
+}
+</script>
+
+</body>
+</html>
