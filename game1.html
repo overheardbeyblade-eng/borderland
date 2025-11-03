@@ -42,7 +42,7 @@
     margin-left:auto;
     margin-right:auto;
     line-height:1.6;
-    min-height:48px; /* menjaga ketinggian agar tidak "belang" */
+    min-height:48px;
   }
 
   button {
@@ -85,7 +85,7 @@ const shuffleIntervalMs = 100;
 const shuffleDuration = 1400;
 
 /* Cards (PNG) */
-const cards = [
+const allCards = [
   { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_clubs.png", name: "3 of Clubs" },
   { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_diamonds.png", name: "3 of Diamonds" },
   { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_hearts.png", name: "3 of Hearts" },
@@ -103,6 +103,9 @@ const cards = [
   { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_hearts.png", name: "Ace of Hearts" },
   { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_spades.png", name: "Ace of Spades" }
 ];
+
+/* State of remaining deck */
+let remainingDeck = [...allCards];
 
 /* Rules mapping (from rulebook) */
 function getFormat(value) {
@@ -132,12 +135,9 @@ let pendingSwapTimeout = null;
 let selectedCard = null;
 
 function setCardVisual(card){
-  // safely set image+name with small fade
   cardImage.style.opacity = 0;
   cardName.style.opacity = 0;
-  // ensure any pending swap canceled before final set
   if (pendingSwapTimeout) { clearTimeout(pendingSwapTimeout); pendingSwapTimeout = null; }
-  // apply after short delay to allow CSS fade
   pendingSwapTimeout = setTimeout(() => {
     cardImage.src = card.url;
     cardName.textContent = card.name;
@@ -147,23 +147,29 @@ function setCardVisual(card){
   }, 60);
 }
 
+function drawUniqueCard(){
+  // jika deck kosong, reset deck
+  if (remainingDeck.length === 0) {
+    remainingDeck = [...allCards];
+  }
+  // ambil index acak dari deck tersisa
+  const idx = Math.floor(Math.random() * remainingDeck.length);
+  const card = remainingDeck.splice(idx, 1)[0]; // hapus dari deck
+  return card;
+}
+
 /* Shuffle handler */
 shuffleButton.addEventListener("click", () => {
-  // disable button until user can shuffle again
   shuffleButton.disabled = true;
-  cardInfo.innerHTML = ""; // clear info while shuffling
+  cardInfo.innerHTML = "";
 
-  // clear any previous timers
   if (shuffleInterval) { clearInterval(shuffleInterval); shuffleInterval = null; }
   if (pendingSwapTimeout) { clearTimeout(pendingSwapTimeout); pendingSwapTimeout = null; }
 
-  // start visual shuffle
   shuffleInterval = setInterval(() => {
-    const r = cards[Math.floor(Math.random() * cards.length)];
-    // schedule quick swap; keep track so we can cancel on stop
+    const r = allCards[Math.floor(Math.random() * allCards.length)];
     if (pendingSwapTimeout) { clearTimeout(pendingSwapTimeout); pendingSwapTimeout = null; }
     pendingSwapTimeout = setTimeout(() => {
-      // show transient card
       cardImage.src = r.url;
       cardName.textContent = r.name;
       cardImage.style.opacity = 1;
@@ -172,26 +178,21 @@ shuffleButton.addEventListener("click", () => {
     }, 60);
   }, shuffleIntervalMs);
 
-  // stop shuffle after configured duration
   setTimeout(() => {
-    // stop interval and clear any scheduled transient swap
     if (shuffleInterval) { clearInterval(shuffleInterval); shuffleInterval = null; }
     if (pendingSwapTimeout) { clearTimeout(pendingSwapTimeout); pendingSwapTimeout = null; }
 
-    // pick final card (deterministic for this draw)
-    selectedCard = cards[Math.floor(Math.random() * cards.length)];
+    selectedCard = drawUniqueCard();
     setCardVisual(selectedCard);
 
-    // update info (format + effect) using the SAME selectedCard
     const format = getFormat(selectedCard.name);
     const effect = getEffect(selectedCard.name);
-    // small delay to let image fade-in finish so UI feels smooth
+
     setTimeout(() => {
       cardInfo.innerHTML = `
         <div><span class="highlight">Format:</span> ${format}</div>
         <div><span class="highlight">Effect:</span> ${effect}</div>
       `;
-      // re-enable shuffle button
       shuffleButton.disabled = false;
     }, 120);
   }, shuffleDuration);
