@@ -143,8 +143,8 @@ const shuffleButton = document.getElementById("shuffleButton");
 function drawUniqueCard() {
   drawCount++;
 
-  // Joker chance: ~1 in 5
-  const jokerChance = 0.2;
+  // Joker chance: ~3 in 10
+  const jokerChance = 0.3;
   if (Math.random() < jokerChance) {
     return jokerCard;
   }
@@ -201,3 +201,4 @@ shuffleButton.addEventListener("click", () => {
 
 </body>
 </html>
+
