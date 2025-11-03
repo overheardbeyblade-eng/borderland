@@ -90,7 +90,7 @@
 </div>
 
 <script>
-const cards = [
+const allCards = [
   { url: "https://deckofcardsapi.com/static/img/AC.png", name: "Ace of Clubs" },
   { url: "https://deckofcardsapi.com/static/img/AD.png", name: "Ace of Diamonds" },
   { url: "https://deckofcardsapi.com/static/img/AH.png", name: "Ace of Hearts" },
@@ -106,9 +106,16 @@ const cards = [
   { url: "https://deckofcardsapi.com/static/img/KC.png", name: "King of Clubs" },
   { url: "https://deckofcardsapi.com/static/img/KD.png", name: "King of Diamonds" },
   { url: "https://deckofcardsapi.com/static/img/KH.png", name: "King of Hearts" },
-  { url: "https://deckofcardsapi.com/static/img/KS.png", name: "King of Spades" },
-  { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqJz1_9jjQStmUCerJRHfdhv2HoZBv3kKu8Q&s", name: "Joker" }
+  { url: "https://deckofcardsapi.com/static/img/KS.png", name: "King of Spades" }
 ];
+
+const jokerCard = { 
+  url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqJz1_9jjQStmUCerJRHfdhv2HoZBv3kKu8Q&s", 
+  name: "Joker" 
+};
+
+let remainingDeck = [...allCards];
+let drawCount = 0;
 
 function getFormat(value) {
   if (value.includes("Ace")) return "1G";
@@ -133,21 +140,50 @@ const cardName = document.getElementById("cardName");
 const cardInfo = document.getElementById("cardInfo");
 const shuffleButton = document.getElementById("shuffleButton");
 
+function drawUniqueCard() {
+  drawCount++;
+
+  // Joker chance: ~1 in 5
+  const jokerChance = 0.2;
+  if (Math.random() < jokerChance) {
+    return jokerCard;
+  }
+
+  // if deck empty, reset
+  if (remainingDeck.length === 0) {
+    remainingDeck = [...allCards];
+  }
+
+  const idx = Math.floor(Math.random() * remainingDeck.length);
+  const card = remainingDeck.splice(idx, 1)[0];
+  return card;
+}
+
+function smoothSwap(card) {
+  cardImage.style.opacity = 0;
+  cardName.style.opacity = 0;
+  setTimeout(() => {
+    cardImage.src = card.url;
+    cardName.textContent = card.name;
+    cardImage.style.opacity = 1;
+    cardName.style.opacity = 1;
+  }, 100);
+}
+
 shuffleButton.addEventListener("click", () => {
   shuffleButton.disabled = true;
   cardInfo.innerHTML = "";
 
   let shuffleInterval = setInterval(() => {
-    const randomCard = cards[Math.floor(Math.random() * cards.length)];
-    cardImage.src = randomCard.url;
-    cardName.textContent = randomCard.name;
+    const tempCard = allCards[Math.floor(Math.random() * allCards.length)];
+    cardImage.src = tempCard.url;
+    cardName.textContent = tempCard.name;
   }, 100);
 
   setTimeout(() => {
     clearInterval(shuffleInterval);
-    const selectedCard = cards[Math.floor(Math.random() * cards.length)];
-    cardImage.src = selectedCard.url;
-    cardName.textContent = selectedCard.name;
+    const selectedCard = drawUniqueCard();
+    smoothSwap(selectedCard);
 
     const format = getFormat(selectedCard.name);
     const effect = getEffect(selectedCard.name);
@@ -158,7 +194,7 @@ shuffleButton.addEventListener("click", () => {
         <div><span class="highlight">Effect:</span> ${effect}</div>
       `;
       shuffleButton.disabled = false;
-    }, 200);
+    }, 250);
   }, 1400);
 });
 </script>
