@@ -67,7 +67,7 @@
 <p>難易度</p>
 
 <div class="card-container">
-  <img id="cardImage" src="https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_spades.png" alt="Kartu">
+  <img id="cardImage" src="https://deckofcardsapi.com/static/img/AS.png" alt="Kartu">
   <div id="cardName">Ace of Spades</div>
 </div>
 
@@ -84,24 +84,25 @@
 const shuffleIntervalMs = 100;
 const shuffleDuration = 1400;
 
-/* Cards (PNG) */
+/* Cards (suit: Clubs=C, Diamonds=D, Hearts=H, Spades=S)
+   Base URL: https://deckofcardsapi.com/static/img/{code}.png */
 const allCards = [
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_clubs.png", name: "3 of Clubs" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_diamonds.png", name: "3 of Diamonds" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_hearts.png", name: "3 of Hearts" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/3_of_spades.png", name: "3 of Spades" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/4_of_clubs.png", name: "4 of Clubs" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/4_of_diamonds.png", name: "4 of Diamonds" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/4_of_hearts.png", name: "4 of Hearts" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/4_of_spades.png", name: "4 of Spades" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/5_of_clubs.png", name: "5 of Clubs" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/5_of_diamonds.png", name: "5 of Diamonds" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/5_of_hearts.png", name: "5 of Hearts" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/5_of_spades.png", name: "5 of Spades" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_clubs.png", name: "Ace of Clubs" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_diamonds.png", name: "Ace of Diamonds" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_hearts.png", name: "Ace of Hearts" },
-  { url: "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/ace_of_spades.png", name: "Ace of Spades" }
+  { url: "https://deckofcardsapi.com/static/img/3C.png", name: "3 of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/3D.png", name: "3 of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/3H.png", name: "3 of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/3S.png", name: "3 of Spades" },
+  { url: "https://deckofcardsapi.com/static/img/4C.png", name: "4 of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/4D.png", name: "4 of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/4H.png", name: "4 of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/4S.png", name: "4 of Spades" },
+  { url: "https://deckofcardsapi.com/static/img/5C.png", name: "5 of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/5D.png", name: "5 of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/5H.png", name: "5 of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/5S.png", name: "5 of Spades" },
+  { url: "https://deckofcardsapi.com/static/img/AC.png", name: "Ace of Clubs" },
+  { url: "https://deckofcardsapi.com/static/img/AD.png", name: "Ace of Diamonds" },
+  { url: "https://deckofcardsapi.com/static/img/AH.png", name: "Ace of Hearts" },
+  { url: "https://deckofcardsapi.com/static/img/AS.png", name: "Ace of Spades" }
 ];
 
 /* State of remaining deck */
@@ -148,13 +149,11 @@ function setCardVisual(card){
 }
 
 function drawUniqueCard(){
-  // jika deck kosong, reset deck
   if (remainingDeck.length === 0) {
     remainingDeck = [...allCards];
   }
-  // ambil index acak dari deck tersisa
   const idx = Math.floor(Math.random() * remainingDeck.length);
-  const card = remainingDeck.splice(idx, 1)[0]; // hapus dari deck
+  const card = remainingDeck.splice(idx, 1)[0];
   return card;
 }
 
