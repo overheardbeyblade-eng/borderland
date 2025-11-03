@@ -11,6 +11,8 @@
     background: #fff;
     color: #000;
     padding-top: 80px;
+    position: relative;
+    overflow: hidden;
   }
 
   h1 { font-weight: 600; font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 4px; }
@@ -69,6 +71,33 @@
   .highlight { font-weight: 600; }
 
   @media (max-width:420px){ img{width:140px;} }
+
+  /* Flash overlay effect */
+  .flash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: red;
+    mix-blend-mode: multiply;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @keyframes flashRedBlack {
+    0%   { background: red; opacity: 0.9; }
+    20%  { background: black; opacity: 1; }
+    40%  { background: red; opacity: 0.8; }
+    60%  { background: black; opacity: 1; }
+    80%  { background: red; opacity: 0.9; }
+    100% { opacity: 0; }
+  }
+
+  .flash-active {
+    animation: flashRedBlack 0.8s ease-in-out;
+  }
 </style>
 </head>
 <body>
@@ -88,6 +117,8 @@
   <div><span class="highlight">Format:</span> 1G</div>
   <div><span class="highlight">Effect:</span> Swap your opponent’s Bit Combo.</div>
 </div>
+
+<div class="flash-overlay" id="flashOverlay"></div>
 
 <script>
 const allCards = [
@@ -139,21 +170,18 @@ const cardImage = document.getElementById("cardImage");
 const cardName = document.getElementById("cardName");
 const cardInfo = document.getElementById("cardInfo");
 const shuffleButton = document.getElementById("shuffleButton");
+const flashOverlay = document.getElementById("flashOverlay");
 
 function drawUniqueCard() {
   drawCount++;
-
-  // Joker chance: ~3 in 10
   const jokerChance = 0.25;
   if (Math.random() < jokerChance) {
+    triggerFlash();
     return jokerCard;
   }
-
-  // if deck empty, reset
   if (remainingDeck.length === 0) {
     remainingDeck = [...allCards];
   }
-
   const idx = Math.floor(Math.random() * remainingDeck.length);
   const card = remainingDeck.splice(idx, 1)[0];
   return card;
@@ -168,6 +196,13 @@ function smoothSwap(card) {
     cardImage.style.opacity = 1;
     cardName.style.opacity = 1;
   }, 100);
+}
+
+function triggerFlash() {
+  flashOverlay.classList.add("flash-active");
+  setTimeout(() => {
+    flashOverlay.classList.remove("flash-active");
+  }, 900);
 }
 
 shuffleButton.addEventListener("click", () => {
@@ -201,8 +236,3 @@ shuffleButton.addEventListener("click", () => {
 
 </body>
 </html>
-
-
-
-
-
